@@ -1,0 +1,37 @@
+{% extends 'appeal/appeal.html' %}
+{% load static %}
+
+{% block title%}
+  <title>Список обращений</title>
+{% endblock %}
+
+
+{% block appeal_form %}
+<br><br><br>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">id</th>
+      <th scope="col">Номер</th>
+      <th scope="col">Дата</th>
+      <th scope="col">ФИО</th>
+      <th scope="col">БСК</th>
+    </tr>
+  </thead>
+  <tbody>
+  	{% for i in context %}
+    <tr>
+      <th scope="row">{{ i.id }}</th>
+      <td>{{ i.appeal_num }}</td>
+      <td>{{ i.appeal_create_date }}</td>
+      <td>{{ i.appeal_owner_name }}</td>
+      <td>{{ i.bsk_number }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
+
+{% block appeal_table %}
+{% endblock %}

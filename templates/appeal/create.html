@@ -1,0 +1,43 @@
+{% extends 'appeal/appeal.html' %}
+{% load static %}
+
+{% block title%}
+	<title>Создать обращения</title>
+{% endblock %}
+
+{% block appeal_form %}
+<br><br><br>
+
+<div class="row">
+	<div class="container col-md-8">
+		
+		<form action="/appeal/appeal_create/" method = "POST">
+
+			{% csrf_token %}
+			
+			<div class="mb-3">
+			  	<label for="id_appeal_num" class="form-label">Номер обращения: </label>
+			  	{{ form.appeal_num }}
+			</div>
+			<div class="mb-3">
+			  	<label for="id_bsk_number" class="form-label">Номер БСК: </label>
+			  	{{ form.bsk_number }}
+			</div>
+			<div class="mb-3">
+			  	<label for="id_appeal_create_date" class="form-label">Дата обращения: </label>
+				{{ form.appeal_create_date }}
+			</div>
+			<div class="mb-3">
+				<label for="id_appeal_owner_name" class="form-label">ФИО заявителя: </label>
+				{{ form.appeal_owner_name }}
+			</div>
+			<div class="mb-3">
+				<button type="submit" class="btn btn-primary">Отправить</button>
+			</div>
+		</form>
+	</div>
+</div>
+{% endblock %}
+
+{% block appeal_table %}
+{% endblock %}
