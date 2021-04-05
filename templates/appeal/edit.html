@@ -1,0 +1,43 @@
+{% extends 'appeal/appeal.html' %}
+{% load static %}
+
+{% block title%}
+  <title>Редактировать обращение</title>
+{% endblock %}
+
+
+{% block appeal_form %}
+<br><br><br>
+<div class="row">
+  <div class="container  col-md-8">
+    <form action="/appeal/appeal_edit/{{ appeal.id }}" method = "POST">
+      {% csrf_token %}
+      <fieldset >
+        <legend>Написать ответ/изменить  обращение</legend>
+          <div class="mb-3">
+            <label for="Select" class="form-label">Выберете категорию</label>
+            <select id="Select" class="form-select">
+              <option>Ответ на обращение</option>
+            </select>
+          </div>  
+
+            <br>
+
+        
+      <div class="mb-3">
+          <label for="id_answer" class="form-label">Введите текст ответа</label>
+          {{ form.answer }}
+      </div>
+
+          <br><br><br>
+
+          <button type="submit" class="btn btn-primary">Ответить</button>
+      </fieldset>
+    </form>
+
+  </div>
+</div>
+{% endblock %}
+
+{% block appeal_table %}
+{% endblock %}

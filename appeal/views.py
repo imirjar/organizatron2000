@@ -1,17 +1,17 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from .models import Appeal
-from .forms import AppealForm
+from .forms import AppealForm, AppealAnswerForm
+from .services import appeal_generate_docx
 
 
 def appeal(request):
     return render(request, 'appeal/appeal.html')
 
 def appeal_create(request):
-    # if this is a POST request we need to process the form data
+    # Если POST то получает данные формы и создает экземпляр модели Appeal
     if request.method == 'POST':
     	form = AppealForm(request.POST)
-    	print(form)
     	if form.is_valid():
     		appeal = Appeal()
     		appeal.appeal_num         = form.cleaned_data['appeal_num']
@@ -20,15 +20,43 @@ def appeal_create(request):
     		appeal.appeal_owner_name  = form.cleaned_data['appeal_owner_name']
     		appeal.save()
     		return HttpResponseRedirect('/appeal/appeal_create')
-    # if a GET (or any other method) we'll create a blank form
+    # Если GET предоставляет форму к заполнению c ссылкой на POST
     else:
         form = AppealForm()
-
+    #Возвращает create.html с определенной формой <form>
     return render(request, 'appeal/create.html', {'form': form})
 
 def appeal_list(request):
     context = Appeal.objects.all()
     return render(request, 'appeal/list.html', {'context': context})
 
-def appeal_detail(request, appeal_id):
-    return render(request, 'appeal/list.html')
+def appeal_edit(request, appeal_id):
+    #Если POST то получает данные формы и переписывает ответ, и уберает подтверждения: правильности ответа и создания docx файла
+    appeal = Appeal.objects.get(id=appeal_id)
+    if request.method == 'POST':
+        form = AppealAnswerForm(request.POST)
+        if form.is_valid():
+            appeal.answer       = form.cleaned_data['answer']
+            appeal.generated    = False
+            appeal.accepted     = False
+            appeal.save()
+            return HttpResponseRedirect('/appeal/appeal_list')
+    # Если GET то предоставляет форму для заполнения ответа
+    else:
+        form = AppealAnswerForm()
+    return render(request, 'appeal/edit.html', {'appeal': appeal, 
+                                                'form': form}
+                                                )
+
+def appeal_accept(request, appeal_id):
+    appeal = Appeal.objects.get(id=appeal_id)
+    appeal.accepted = True
+    appeal.save()
+    return HttpResponseRedirect('/appeal/appeal_list')
+
+def appeal_generate(request, appeal_id):
+    appeal = Appeal.objects.get(id=appeal_id)
+    appeal.generated = True
+    appeal_generate_docx(appeal)
+    appeal.save()
+    return HttpResponseRedirect('/appeal/appeal_list')

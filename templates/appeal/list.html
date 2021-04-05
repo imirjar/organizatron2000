@@ -12,21 +12,25 @@
 <table class="table">
   <thead>
     <tr>
-      <th scope="col">id</th>
-      <th scope="col">Номер</th>
-      <th scope="col">Дата</th>
-      <th scope="col">ФИО</th>
-      <th scope="col">БСК</th>
+      <th width="5%" scope="col">Номер</th>
+      <th width="9%" scope="col">Дата</th>
+      <th width="16%" scope="col">ФИО</th>
+      <th width="20%" scope="col">БСК</th>
+      <th width="40%" scope="col">Ответ</th>      
+      <th width="5%" scope="col"></th>
+      <th width="5%" scope="col"></th>
     </tr>
   </thead>
   <tbody>
-  	{% for i in context %}
-    <tr>
-      <th scope="row">{{ i.id }}</th>
-      <td>{{ i.appeal_num }}</td>
-      <td>{{ i.appeal_create_date }}</td>
-      <td>{{ i.appeal_owner_name }}</td>
-      <td>{{ i.bsk_number }}</td>
+    {% for i in context %}
+    <tr {% if i.accepted %}class="table-success"{% endif %}>
+      <th width="5%" scope="row"><a href="/appeal/appeal_edit/{{ i.id }}">{{ i.appeal_num }}</a></th>
+      <td width="9%">{{ i.appeal_create_date }}</td>
+      <td width="16%">{{ i.appeal_owner_name }}</td>
+      <td width="20%">{{ i.bsk_number }}</td>
+      <td width="40%">{% if i.answer %}{{ i.answer }}{% else %}<a href="/appeal/appeal_edit/{{ i.id }}"  class="btn btn-warning">Дать ответ</a>{% endif %}</td>
+      <td width="5%">{% if i.accepted %}{% if i.generated %}Сформировано{% else %}{% if i.answer %}<a href="/appeal/appeal_generate/{{i.id}}" class="btn btn-info">Сформировать</a>{% endif %}{% endif %}{% endif %}</td>
+      <td width="5%">{% if i.accepted %}Подтверждено{% else %}{% if i.answer %}<a href="/appeal/appeal_accept/{{i.id}}" class="btn btn-secondary">Подтвердить</a>{% endif %}{% endif %}</td>
     </tr>
     {% endfor %}
   </tbody>

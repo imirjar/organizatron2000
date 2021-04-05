@@ -6,3 +6,6 @@ class AppealForm(forms.Form):
     appeal_create_date = forms.DateField(label='appeal_create_date')
     appeal_owner_name = forms.CharField(label='appeal_owner_name', max_length=100)
 
+class AppealAnswerForm(forms.Form):
+    answer = forms.CharField(label='answer', max_length=500, widget=forms.Textarea)
+
