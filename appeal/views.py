@@ -2,7 +2,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from .models import Appeal
 from .forms import AppealForm, AppealAnswerForm
-from .services import appeal_generate_docx
+from .services import appeal_generate_docx, check_bsk_info
 
 
 def appeal(request):
@@ -28,11 +28,17 @@ def appeal_create(request):
 
 def appeal_list(request):
     context = Appeal.objects.all()
-    return render(request, 'appeal/list.html', {'context': context})
+    return render(request, 'appeal/list.html', {'context': context,})
 
 def appeal_edit(request, appeal_id):
     #Если POST то получает данные формы и переписывает ответ, и уберает подтверждения: правильности ответа и создания docx файла
     appeal = Appeal.objects.get(id=appeal_id)
+    bsk_num = (str(appeal.bsk_number)[8:-1])
+    info = check_bsk_info(bsk_num)
+
+    bsk_in_black_list = info['black_list']
+    bsk_in_send_payment = info['send_payment']
+    
     if request.method == 'POST':
         form = AppealAnswerForm(request.POST)
         if form.is_valid():
@@ -44,8 +50,12 @@ def appeal_edit(request, appeal_id):
     # Если GET то предоставляет форму для заполнения ответа
     else:
         form = AppealAnswerForm()
-    return render(request, 'appeal/edit.html', {'appeal': appeal, 
-                                                'form': form}
+    return render(request, 'appeal/edit.html', {'appeal'            : appeal,
+                                                'bsk_num'           : bsk_num,
+                                                'form'              : form,
+                                                'bsk_in_black_list' : bsk_in_black_list,
+                                                'send_payment'      : bsk_in_send_payment,
+                                                }
                                                 )
 
 def appeal_accept(request, appeal_id):

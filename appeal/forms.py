@@ -8,4 +8,4 @@ class AppealForm(forms.Form):
 
 class AppealAnswerForm(forms.Form):
     answer = forms.CharField(label='answer', max_length=500, widget=forms.Textarea)
-
+    answer.widget.attrs.update({'class':'form-control', 'required':'required'})

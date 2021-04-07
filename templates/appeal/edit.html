@@ -9,32 +9,94 @@
 {% block appeal_form %}
 <br><br><br>
 <div class="row">
-  <div class="container  col-md-8">
-    <form action="/appeal/appeal_edit/{{ appeal.id }}" method = "POST">
-      {% csrf_token %}
-      <fieldset >
-        <legend>Написать ответ/изменить  обращение</legend>
-          <div class="mb-3">
-            <label for="Select" class="form-label">Выберете категорию</label>
-            <select id="Select" class="form-select">
-              <option>Ответ на обращение</option>
-            </select>
-          </div>  
+  <br><br><br>
+  <div class="col-md-6">
+    <div class="container">
+      <form action="/appeal/appeal_edit/{{ appeal.id }}" method = "POST">
+        {% csrf_token %}
+        <fieldset >
+            <div class="mb-3">
+              <label for="Select" class="form-label">Выберете категорию</label>
+              <select id="Select" class="form-select">
+                <option>Ответ на обращение</option>
+              </select>
+            </div>  
+              <br>
+        <div class="mb-3">
+            {{ form.answer }}
+        </div>
 
-            <br>
+            <br><br><br>
 
-        
-      <div class="mb-3">
-          <label for="id_answer" class="form-label">Введите текст ответа</label>
-          {{ form.answer }}
+            <button type="submit" class="btn btn-primary">Ответить</button>
+        </fieldset>
+      </form>
+      {% if appeal.answer %}<h3>{{ appeal.answer }}</h3>{% endif %}
+    </div>
+  </div>
+  <div class="col-md-6">
+    <!-- Информация о носителе + ЧС -->
+    <div class="container"> 
+      <a>Информация о Носителе</a>
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col"></th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">Владелец</th>
+            <th scope="row">{{ appeal.appeal_owner_name }}</th>
+          </tr>
+          <tr>
+            <th scope="row">Печатный номер </th>
+            <th scope="row">{{ appeal.bsk_number }}</th>
+          </tr>
+          <tr>
+            <th scope="row">Номер:</th>
+            <th scope="row">{{ bsk_num }}</th>
+          </tr>
+          <tr>
+            <th scope="row">ЧЕРНЫЙ СПИСОК</th>
+            <td>{% if bsk_in_black_list %}Носитель в ЧЕРНОМ СПИСКЕ СПБ ГКУ "ОРГП" {% else %} Носителя нет в ЧЕРНОМ СПИСКЕ СПБ ГКУ "ОРГП"{% endif %}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!-- Отложенные платежи -->
+    <div class="container">
+      <div class="accordion" id="accordionExample">
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="headingOne">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+              Отложенные платежи  
+            </button>
+          </h2>
+          <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+            <div class="accordion-body">
+             <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col"></th>
+                  <th scope="col"></th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for i in send_payment %}
+                <tr>
+                  <th scope="row">Отложенный платеж</th>
+                  <td>{% if i %}Сумма: {{ i.4 }}<br>Создан: {{ i.5 }}<br>Изменен: {{ i.8 }}<br>Статус: {{ i.6 }}{% endif %}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+            </div>
+          </div>
+        </div>
       </div>
-
-          <br><br><br>
-
-          <button type="submit" class="btn btn-primary">Ответить</button>
-      </fieldset>
-    </form>
-
+    </div>
   </div>
 </div>
 {% endblock %}
