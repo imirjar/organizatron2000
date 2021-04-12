@@ -24,4 +24,16 @@ class Appeal(models.Model):
 	generated  					=	models.BooleanField(default = False)
 	
 	def __str__(self):
-		return self.bsk_number
+		return self.appeal_num
+
+
+
+class ArchiveAppeal(Appeal):
+	def archivate(appeal_id):
+		appeal = Appeal.objects.get(id=appeal_id)
+		archive_appeal = ArchiveAppeal.objects.create(appeal_num = appeal.appeal_num, 
+										bsk_number = appeal.bsk_number, 
+										appeal_owner_name = appeal.appeal_owner_name,
+										answer = appeal.answer
+										)
+		archive_appeal.save()

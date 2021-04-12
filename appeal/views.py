@@ -1,6 +1,6 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
-from .models import Appeal
+from .models import Appeal, ArchiveAppeal
 from .forms import AppealForm, AppealAnswerForm
 from .services import appeal_generate_docx, check_bsk_info
 from django.db.models import Q
@@ -75,3 +75,6 @@ def appeal_generate(request, appeal_id):
     appeal_generate_docx(appeal)
     appeal.save()
     return HttpResponseRedirect('/appeal/appeal_list')
+
+def appeal_archive(request, appeal_id):
+    ArchiveAppeal.archivate(appeal_id)
