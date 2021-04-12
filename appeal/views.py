@@ -3,6 +3,7 @@ from django.shortcuts import render
 from .models import Appeal
 from .forms import AppealForm, AppealAnswerForm
 from .services import appeal_generate_docx, check_bsk_info
+from django.db.models import Q
 
 
 def appeal(request):
@@ -27,7 +28,11 @@ def appeal_create(request):
     return render(request, 'appeal/create.html', {'form': form})
 
 def appeal_list(request):
-    context = Appeal.objects.all()
+    search_query = request.GET.get('search', '')
+    if search_query:
+        context = Appeal.objects.filter(Q(bsk_number__icontains=search_query) | Q(appeal_num__icontains=search_query) | Q(appeal_owner_name__icontains=search_query))
+    else:    
+        context = Appeal.objects.all()
     return render(request, 'appeal/list.html', {'context': context,})
 
 def appeal_edit(request, appeal_id):

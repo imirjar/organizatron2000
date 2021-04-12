@@ -1,0 +1,4 @@
+appeal/sqlpswd.py
+static/appeal/
+env
+db.sqlite3

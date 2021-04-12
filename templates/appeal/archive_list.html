@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block title%}
-  <title>Список обращений</title>
+  <title>Архив обращений</title>
 {% endblock %}
 
 {% block nav %}
@@ -21,7 +21,7 @@
             <a class="nav-link " href="/appeal/appeal_list">Просмотр обращений</a>
           </li>
           <li class="nav-item">
-              <a class="nav-link " href="/appeal/archive_appeal_list">Просмотр архива</a>
+            <a class="nav-link " href="/appeal/archive_appeal_list">Просмотр архива</a>
           </li>
         </ul>
         <form class="d-flex" action="">
@@ -57,7 +57,7 @@
         <td width="20%">{{ i.bsk_number }}</td>
         <td width="40%">{% if i.answer %}{{ i.answer }}{% else %}<a href="/appeal/appeal_edit/{{ i.id }}"  class="btn btn-warning">Дать ответ</a>{% endif %}</td>
         <td width="5%">{% if i.accepted %}{% if i.generated %}Сформировано{% else %}{% if i.answer %}<a href="/appeal/appeal_generate/{{i.id}}" class="btn btn-info">Сформировать</a>{% endif %}{% endif %}{% endif %}</td>
-        <td width="5%">{% if i.accepted and i.generated %}<a href="/appeal/appeal_archive/{{i.id}}" class="btn btn-danger">Архивировать</a>{% else %}{% if i.accepted %}Подтверждено{% else %}{% if i.answer %}<a href="/appeal/appeal_accept/{{i.id}}" class="btn btn-secondary">Подтвердить</a>{% endif %}{% endif %}{% endif %}</td>
+        <td width="5%">{% if i.accepted %}Подтверждено{% else %}{% if i.answer %}<a href="/appeal/appeal_accept/{{i.id}}" class="btn btn-secondary">Подтвердить</a>{% endif %}{% endif %}</td>
       </tr>
       {% endfor %}
     </tbody>
