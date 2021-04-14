@@ -19,21 +19,12 @@ class Appeal(models.Model):
 	route_direction  			=	models.CharField(max_length=50, default=None, null = True, blank=True)
 	auto_number  				=	models.CharField(max_length=50, default=None, null = True, blank=True)
 	answer_method	  			=	models.CharField(max_length=50, default=None, null = True, blank=True)
-	answer  					=	models.TextField(max_length=500, default=None, null = True, blank=True)
+	answer  					=	models.TextField(max_length=1500, default=None, null = True, blank=True)
 	accepted  					=	models.BooleanField(default = False)
 	generated  					=	models.BooleanField(default = False)
-	
+	archivated 					=	models.BooleanField(default = False)
+
 	def __str__(self):
-		return self.appeal_num
+		return self.bsk_number
 
 
-
-class ArchiveAppeal(Appeal):
-	def archivate(appeal_id):
-		appeal = Appeal.objects.get(id=appeal_id)
-		archive_appeal = ArchiveAppeal.objects.create(appeal_num = appeal.appeal_num, 
-										bsk_number = appeal.bsk_number, 
-										appeal_owner_name = appeal.appeal_owner_name,
-										answer = appeal.answer
-										)
-		archive_appeal.save()

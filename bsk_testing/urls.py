@@ -8,8 +8,5 @@ from .views import *
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browsable API.
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', dashboard),
-    path('appeal/', include('appeal.urls')),
-    path('bsk_testing/', include('bsk_testing.urls'))
+	path('', bsk_testing),#стартовая страница без функционала
 ]

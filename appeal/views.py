@@ -1,13 +1,11 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
-from .models import Appeal, ArchiveAppeal
+from .models import Appeal
 from .forms import AppealForm, AppealAnswerForm
 from .services import appeal_generate_docx, check_bsk_info
 from django.db.models import Q
 
 
-def appeal(request):
-    return render(request, 'appeal/appeal.html')
 
 def appeal_create(request):
     # Если POST то получает данные формы и создает экземпляр модели Appeal
@@ -35,6 +33,15 @@ def appeal_list(request):
         context = Appeal.objects.all()
     return render(request, 'appeal/list.html', {'context': context,})
 
+def archive_appeal_list(request):
+    search_query = request.GET.get('search', '')
+    if search_query:
+        context = Appeal.objects.filter(Q(bsk_number__icontains=search_query) | Q(appeal_num__icontains=search_query) | Q(appeal_owner_name__icontains=search_query))
+    else:    
+        context = Appeal.objects.all()
+    return render(request, 'appeal/archive_list.html', {'context': context,})
+
+
 def appeal_edit(request, appeal_id):
     #Если POST то получает данные формы и переписывает ответ, и уберает подтверждения: правильности ответа и создания docx файла
     appeal = Appeal.objects.get(id=appeal_id)
@@ -43,6 +50,8 @@ def appeal_edit(request, appeal_id):
 
     bsk_in_black_list = info['black_list']
     bsk_in_send_payment = info['send_payment']
+    bsk_in_emission = info['emission']
+    bsk_in_sod_trans = info['sod_trans']
     
     if request.method == 'POST':
         form = AppealAnswerForm(request.POST)
@@ -56,16 +65,24 @@ def appeal_edit(request, appeal_id):
     else:
         form = AppealAnswerForm()
     return render(request, 'appeal/edit.html', {'appeal'            : appeal,
+                                                'bsk_in_emission'   : bsk_in_emission,
                                                 'bsk_num'           : bsk_num,
                                                 'form'              : form,
                                                 'bsk_in_black_list' : bsk_in_black_list,
                                                 'send_payment'      : bsk_in_send_payment,
+                                                'sod_trans'         : bsk_in_sod_trans,
                                                 }
                                                 )
 
 def appeal_accept(request, appeal_id):
     appeal = Appeal.objects.get(id=appeal_id)
     appeal.accepted = True
+    appeal.save()
+    return HttpResponseRedirect('/appeal/appeal_list')
+
+def appeal_archivate(request, appeal_id):
+    appeal = Appeal.objects.get(id=appeal_id)
+    appeal.archivated = True
     appeal.save()
     return HttpResponseRedirect('/appeal/appeal_list')
 
@@ -76,5 +93,3 @@ def appeal_generate(request, appeal_id):
     appeal.save()
     return HttpResponseRedirect('/appeal/appeal_list')
 
-def appeal_archive(request, appeal_id):
-    ArchiveAppeal.archivate(appeal_id)
