@@ -23,7 +23,7 @@
             </div>  
               <br>
         <div class="mb-3">
-            <textarea name="answer" cols="40" rows="10" maxlength="1500" class="form-control" required="" id="id_answer">{% if appeal.answer %}{{ appeal.answer }}{% endif %}</textarea>
+            <textarea name="answer" cols="40" rows="10" maxlength="1500" class="form-control" required="" id="id_answer">{% if appeal.answer %}{{ appeal.answer }}{% else %}        Специалистами СПб ГКУ «Организатор перевозок» произведена проверка фактов, указанных в заявлении, и по результатам проверки установлено, что {% endif %}</textarea>
         </div>
 
             <br><br><br>
