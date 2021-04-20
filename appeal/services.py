@@ -24,7 +24,7 @@ def check_bsk_info(bsk_number):
 	cnxn = pyodbc.connect('DRIVER={ODBC Driver 17 for SQL Server};SERVER='+server+';DATABASE='+database+';UID='+username+';PWD='+ password)
 	cursor = cnxn.cursor()
 	black_list_query = cursor.execute("SELECT * FROM BlackList WHERE card_num = '%s';"%str(bsk_number)).fetchall() 
-	send_payment_query = cursor.execute("SELECT * FROM SendPayment WHERE CardNumber = '%s';"%str(bsk_number)).fetchall()
+	send_payment_query = cursor.execute("SELECT * FROM SendPayment WHERE CardNumber = '%s' ORDER BY ChangeStatusTime DESC;"%str(bsk_number)).fetchall()
 	emission_query = cursor.execute("SELECT * FROM Emission WHERE BSK_NUM = '%s';"%str(bsk_number)).fetchall()
 	sod_trans_query = cursor.execute("SELECT * FROM SodTrans WHERE card_number = '%s';"%str(bsk_number)).fetchall()
 	return {'black_list' 		: black_list_query, 
